@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/orphanages")
@@ -54,5 +56,37 @@ public class OrphanageController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(orphanageModelOptional.get());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateOrphanage(@PathVariable(value = "id") UUID id, @RequestBody @Valid OrphanageModel orphanageModel) {
+
+        Optional<OrphanageModel> orphanageModelOptional = orphanageRepository.findById(id);
+
+        if (!orphanageModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Orphanage not found.");
+        }
+
+        if (orphanageRepository.existsByName(orphanageModel.getName()) && !orphanageModelOptional.get().getName().equals(orphanageModel.getName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Orphanage name is already in use.");
+        }
+
+        orphanageModel.setId(orphanageModelOptional.get().getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(orphanageRepository.save(orphanageModel));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteOrphanage(@PathVariable(value = "id") UUID id){
+
+        Optional<OrphanageModel> orphanageModelOptional = orphanageRepository.findById(id);
+
+        if (!orphanageModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Orphanage not found.");
+        }
+
+        orphanageRepository.delete(orphanageModelOptional.get());
+
+        return ResponseEntity.status(HttpStatus.OK).body("Orphanage deleted successfully.");
     }
 }
