@@ -1,10 +1,8 @@
-<p align="center">
-    <img align="center" src=".github/index.jpg" width="350" />
-    <img align="center" src=".github/mapas.jpg" width="350" height="220" />
-    <br />
-    <br />
-    <img align="center" src=".github/formularios.jpg" width="400" />
-</p>
+# Happy Project
+
+## 🏂 Sobre
+
+- Happy é uma plataforma que indica a localização de orfanatos com o auxílio de mapas.
 
 ## 🚀 Tecnologias
 
@@ -12,10 +10,6 @@
 - [ReactJS](https://reactjs.org)
 - [PostgreSQL](https://www.postgresql.org/)
 - [MapBox](https://www.mapbox.com/)
-
-## 💻 Sobre
-
-- Happy é uma plataforma que indica a localização de orfanatos com o auxílio de mapas.
 
 ## 🔖 Layout
 
@@ -30,3 +24,14 @@
 - Em springboot/src/main/application.properties informe as conexões do seu banco de dados.
 - Inicie o projeto springboot.
 - Inicie o projeto reactjs.
+- Acesse: http://localhost:8080/swagger-ui/ e http://localhost:3000
+
+## 💻 Print Screen
+
+<p align="center">
+    <img align="center" src=".github/index.jpg" width="375" />
+    <img align="center" src=".github/mapas.jpg" width="375" height="235" />
+    <br />
+    <br />
+    <img align="center" src=".github/formularios.jpg" width="750" />
+</p>

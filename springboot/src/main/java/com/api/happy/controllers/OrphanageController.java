@@ -59,7 +59,8 @@ public class OrphanageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateOrphanage(@PathVariable(value = "id") UUID id, @RequestBody @Valid OrphanageModel orphanageModel) {
+    public ResponseEntity<Object> updateOrphanage(@PathVariable(value = "id") UUID id,
+            @RequestBody @Valid OrphanageModel orphanageModel) {
 
         Optional<OrphanageModel> orphanageModelOptional = orphanageRepository.findById(id);
 
@@ -67,7 +68,8 @@ public class OrphanageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Orphanage not found.");
         }
 
-        if (orphanageRepository.existsByName(orphanageModel.getName()) && !orphanageModelOptional.get().getName().equals(orphanageModel.getName())) {
+        if (orphanageRepository.existsByName(orphanageModel.getName())
+                && !orphanageModelOptional.get().getName().equals(orphanageModel.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Orphanage name is already in use.");
         }
 
@@ -77,7 +79,7 @@ public class OrphanageController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteOrphanage(@PathVariable(value = "id") UUID id){
+    public ResponseEntity<Object> deleteOrphanage(@PathVariable(value = "id") UUID id) {
 
         Optional<OrphanageModel> orphanageModelOptional = orphanageRepository.findById(id);
 
