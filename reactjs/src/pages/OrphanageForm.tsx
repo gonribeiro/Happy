@@ -1,6 +1,6 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { Map, Marker, TileLayer } from 'react-leaflet';
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import api from "../services/api";
 import { LeafletMouseEvent } from 'leaflet';
 
@@ -8,8 +8,14 @@ import '../styles/pages/create-orphanage.css';
 import Sidebar from "../components/Sidebar";
 import mapIcon from "../utils/mapIcon";
 
-export default function CreateOrphanage() {
+interface OrphanageParams {
+  id: string;
+}
+
+export default function OrphanageForm() {
   const history = useHistory();
+
+  const params = useParams<OrphanageParams>();
 
   const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
   const [name, setName] = useState('');
@@ -18,6 +24,25 @@ export default function CreateOrphanage() {
   const [openingHours, setOpeningHours] = useState('');
   const [openOnWeekends, setOpenOnWeekends] = useState(true);
   const [photos, setPhotos] = useState('');
+
+  useEffect(() => {
+    if (params.id) {
+      api.get(`orphanages/${params.id}`)
+        .then(response => {
+          setName(response.data.name)
+          setPosition({ latitude: response.data.latitude, longitude: response.data.longitude })
+          setAbout(response.data.about)
+          setInstructions(response.data.instructions)
+          setOpeningHours(response.data.openingHours)
+          setOpenOnWeekends(response.data.openOnWeekends)
+          setPhotos(response.data.photos[0].path)
+        })
+        .catch(error => {
+          alert(error.response.data);
+          history.push('/app');
+        })
+    }
+  }, [params.id]);
 
   function handleMapClick(event: LeafletMouseEvent) {
     const { lat, lng } = event.latlng;
@@ -33,16 +58,12 @@ export default function CreateOrphanage() {
 
     const { latitude, longitude } = position;
 
-    if (latitude === 0 && longitude === 0) {
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      alert('Marque a localização no mapa');
-
-    } else {
-      await api.post('orphanages', {
+    if (params.id) {
+      await api.put(`orphanages/${params.id}`, {
         name,
-        about,
         latitude,
         longitude,
+        about,
         instructions,
         openingHours,
         openOnWeekends,
@@ -51,12 +72,38 @@ export default function CreateOrphanage() {
         }]
       })
         .then(function (response) {
-          alert('Cadastro realizado com sucesso!')
-          history.push('/app');
+          alert('Atualizado realizado com sucesso!')
+          history.push(`/orphanages/show/${params.id}`);
         })
         .catch(function (error) {
           alert(error.response.data)
         });
+    } else {
+      if (latitude === 0 && longitude === 0) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        alert('Marque a localização no mapa');
+
+      } else {
+        await api.post('orphanages', {
+          name,
+          about,
+          latitude,
+          longitude,
+          instructions,
+          openingHours,
+          openOnWeekends,
+          'photos': [{
+            'path': photos
+          }]
+        })
+          .then(function (response) {
+            alert('Cadastro realizado com sucesso!')
+            history.push('/app');
+          })
+          .catch(function (error) {
+            alert(error.response.data)
+          });
+      }
     }
   }
 
