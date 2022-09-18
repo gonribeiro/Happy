@@ -30,7 +30,7 @@ public class PhotoModel implements Serializable {
         return path;
     }
 
-    public void setPatch(String path) {
+    public void setPath(String path) {
         this.path = path;
     }
 }
