@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import api from "../services/api";
 import { LeafletMouseEvent } from 'leaflet';
 
-import '../styles/pages/create-orphanage.css';
+import '../styles/pages/orphanage-form.css';
 import Sidebar from "../components/Sidebar";
 import mapIcon from "../utils/mapIcon";
 
@@ -108,11 +108,11 @@ export default function OrphanageForm() {
   }
 
   return (
-    <div id="page-create-orphanage">
+    <div id="page-orphanage-form">
       <Sidebar />
 
       <main>
-        <form onSubmit={handleSubmit} className="create-orphanage-form">
+        <form onSubmit={handleSubmit} className="orphanage-form">
           <fieldset>
             <legend>Dados</legend>
 
